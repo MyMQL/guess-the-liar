@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Guess the Liar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <div class="lamp"></div>
+    <h1>GUESS THE LIAR</h1>
+    <div class="tagline">jedno z was odpowiada na inne pytanie. znajdzcie kto.</div>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- SCREEN: HOME -->
+  <section class="screen active" id="screen-home">
+    <div class="panel">
+      <div class="eyebrow">Nowa gra</div>
+      <h2>Stwórz pokój</h2>
+      <label for="hostName">Twoje imię</label>
+      <input type="text" id="hostName" maxlength="20" placeholder="np. Hubert" />
+      <label for="hostRounds">Liczba rund</label>
+      <input type="number" id="hostRounds" min="1" max="50" value="10" />
+      <button class="btn-primary" id="btnCreateRoom">Stwórz pokój</button>
+    </div>
+
+    <div class="panel">
+      <div class="eyebrow">Masz kod</div>
+      <h2>Dołącz do pokoju</h2>
+      <label for="joinName">Twoje imię</label>
+      <input type="text" id="joinName" maxlength="20" placeholder="np. Kasia" />
+      <label for="joinCode">Kod pokoju</label>
+      <input type="text" id="joinCode" maxlength="6" placeholder="np. K7X2M" style="text-transform:uppercase; font-family:var(--font-mono); letter-spacing:0.2em;" />
+      <button class="btn-primary" id="btnJoinRoom">Dołącz</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: LOBBY -->
+  <section class="screen" id="screen-lobby">
+    <div class="panel" style="text-align:center;">
+      <div class="eyebrow">Kod pokoju - podaj go pozostałym</div>
+      <div class="tag-row">
+        <div class="evidence-tag"><span class="code" id="lobbyCode">-----</span></div>
+      </div>
+      <div class="hint" id="lobbyRoundsHint"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Gracze</h3>
+      <ul class="roster" id="lobbyRoster"></ul>
+    </div>
+
+    <button class="btn-primary" id="btnStartGame" style="display:none;">Rozpocznij grę</button>
+    <p class="hint" id="lobbyWaitHint">Czekamy, aż host rozpocznie grę...</p>
+  </section>
+
+  <!-- SCREEN: ANSWERING -->
+  <section class="screen" id="screen-answering">
+    <div class="panel">
+      <div class="round-header">
+        <span class="eyebrow" id="roundLabel">RUNDA 1 / 10</span>
+      </div>
+      <div class="question-box" id="questionText">...</div>
+
+      <div id="answerFormWrap">
+        <label for="answerInput">Twoja odpowiedź</label>
+        <textarea id="answerInput" maxlength="200" placeholder="Wpisz odpowiedź..."></textarea>
+        <button class="btn-primary" id="btnSubmitAnswer">Wyślij odpowiedź</button>
+      </div>
+      <div id="answerSentMsg" style="display:none;">
+        <p style="text-align:center; color:var(--accent-green);">Odpowiedź wysłana. Czekamy na resztę...</p>
+      </div>
+
+      <div class="status-line" id="answerStatus">Odpowiedziało: 0/0</div>
+      <button class="btn-ghost" id="btnForceReveal" style="margin-top:12px; display:none;">Pokaż odpowiedzi teraz (host)</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: REVEAL -->
+  <section class="screen" id="screen-reveal">
+    <div class="panel">
+      <div class="eyebrow">Prawdziwe pytanie brzmiało</div>
+      <h2 id="revealQuestion"></h2>
+    </div>
+
+    <div class="panel">
+      <h3>Odpowiedzi</h3>
+      <ul class="answer-list" id="revealAnswers"></ul>
+    </div>
+
+    <button class="btn-primary" id="btnStartVoting" style="display:none;">Rozpocznij głosowanie</button>
+    <p class="hint" id="revealWaitHint">Przedyskutujcie odpowiedzi na głos, potem host rozpocznie głosowanie.</p>
+  </section>
+
+  <!-- SCREEN: VOTING -->
+  <section class="screen" id="screen-voting">
+    <div class="panel">
+      <div class="eyebrow">Werdykt</div>
+      <h2>Kto kłamie?</h2>
+      <div class="lineup" id="lineup"></div>
+      <div class="status-line" id="voteStatus">Zagłosowało: 0/0</div>
+      <button class="btn-ghost" id="btnForceFinishVoting" style="margin-top:12px; display:none;">Zakończ głosowanie teraz (host)</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: RESULTS -->
+  <section class="screen" id="screen-results">
+    <div class="panel">
+      <div class="verdict" id="verdictBlock"></div>
+      <div class="score-changes" id="scoreChangesLine"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Tabela wyników</h3>
+      <ul class="scoreboard" id="roundScoreboard"></ul>
+    </div>
+
+    <button class="btn-primary" id="btnNextRound" style="display:none;">Następna runda</button>
+    <p class="hint" id="resultsWaitHint">Czekamy na hosta...</p>
+  </section>
+
+  <!-- SCREEN: END -->
+  <section class="screen" id="screen-end">
+    <div class="panel winner-banner">
+      <div class="trophy">🏆</div>
+      <div class="eyebrow">Zwycięzca</div>
+      <div class="wname" id="winnerName">-</div>
+    </div>
+
+    <div class="panel">
+      <h3>Wyniki końcowe</h3>
+      <ul class="scoreboard" id="finalScoreboard"></ul>
+    </div>
+
+    <button class="btn-secondary" id="btnNewGame">Powrót do menu</button>
+  </section>
+
+  <div class="footer-note">guess the liar &middot; gra dla znajomych</div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+</body>
+</html>
