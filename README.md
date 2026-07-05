@@ -2,11 +2,9 @@
 
 Gra imprezowa dla znajomych. Wszyscy gracze oprócz jednego dostają to samo pytanie — kłamca dostaje pytanie podobne, ale inne, i nie wie o tym. Zadaniem reszty jest go namierzyć.
 
-[![Downloads](https://img.shields.io/github/downloads/TWOJ-USER/TWOJE-REPO/total)](https://github.com/TWOJ-USER/TWOJE-REPO/releases)
+[![Downloads](https://img.shields.io/github/downloads/MyMQL/guess-the-liar/total)](https://github.com/TWOJ-USER/TWOJE-REPO/releases)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 ![Status](https://img.shields.io/badge/status-stabilny-blue)
-
-> Podmień `TWOJ-USER/TWOJE-REPO` w linku do badge'a na własną nazwę repozytorium, żeby licznik pobrań liczył realne dane z Twoich Releases.
 
 ---
 
